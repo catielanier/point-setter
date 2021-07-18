@@ -1,0 +1,7 @@
+/node_modules/
+/public/build/
+/api/constants/
+.now
+.vercel
+
+.DS_Store

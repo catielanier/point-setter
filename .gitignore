@@ -1,6 +1,6 @@
 /node_modules/
 /public/build/
-/api/constants/
+constants/
 .now
 .vercel
 

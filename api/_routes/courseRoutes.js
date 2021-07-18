@@ -1,54 +1,33 @@
 const express = require("express");
 const axios = require("axios");
 
+const { setParams, apiPagination } = require("../_helpers/pagination");
+
 const router = express.Router();
 
 router.route("/").get(async (req, res) => {
   const { apiKey: access_token } = req.query;
   try {
-    const courses = [];
+    let courses = [];
+    const state = ["available", "unpublished"];
+    const include = ["term"];
+    const url = "https://canvas.instructure.com/api/v1/courses";
+
+    const params = setParams(access_token, state, include);
     const canvasResults = await axios({
       method: "GET",
-      url: "https://canvas.instructure.com/api/v1/courses",
+      url,
       headers: {
         Accept: "application/json+canvas-string-ids",
       },
-      params: {
-        access_token,
-        per_page: 100,
-        state: ["available", "unpublished"],
-        include: ["term"],
-      },
+      params,
     });
     canvasResults.data.forEach((course) => {
       courses.push(course);
     });
     if (canvasResults.data.length === 100) {
-      let page = 1;
-      async function apiPagination() {
-        const nextPageResults = await axios({
-          method: "GET",
-          url: "https://canvas.instructure.com/api/v1/courses",
-          headers: {
-            Accept: "application/json+canvas-string-ids",
-          },
-          params: {
-            access_token,
-            per_page: 100,
-            state: ["available", "unpublished"],
-            include: ["term"],
-            page,
-          },
-        });
-        nextPageResults.data.forEach((course) => {
-          courses.push(course);
-        });
-        if (nextPageResults.data.length === 100) {
-          page++;
-          await apiPagination();
-        }
-      }
-      await apiPagination();
+      params.page = 2;
+      courses = await apiPagination(url, params, courses);
     }
     res.status(200).json({
       courses,

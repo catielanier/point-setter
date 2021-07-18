@@ -4,6 +4,7 @@ exports.setParams = function (
   access_token,
   state = [],
   include = [],
+  order_by = null,
   page = 1
 ) {
   return {
@@ -12,6 +13,7 @@ exports.setParams = function (
     page,
     state,
     include,
+    order_by,
   };
 };
 

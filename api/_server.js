@@ -11,12 +11,14 @@ const { applyMiddleware } = require("./_utils");
 const { MONGODB_URI } = require("./_utils/constants");
 
 const { router: courseRoutes } = require("./_routes/courseRoutes");
+const { router: assignmentRoutes } = require("./_routes/assignmentRoutes");
 
 // import routers above this line
 applyMiddleware(middleWare, router);
 
 // use routes below this line
 router.use("/api/courses", courseRoutes);
+router.use("/api/assignments", assignmentRoutes);
 
 const server = http.createServer(router);
 

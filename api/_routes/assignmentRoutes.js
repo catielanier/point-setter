@@ -8,9 +8,9 @@ const router = express.Router();
 router.route("/").get(async (req, res) => {
   const { apiKey: access_token, course } = req.query;
   try {
-    const unitExamWeight = 25,
-      quizWeight = 10,
-      finalExamWeight = 15;
+    const unitExamWeight = 0.25,
+      quizWeight = 0.1,
+      finalExamWeight = 0.15;
     let labWeight,
       projectWeight,
       assignments = [];
@@ -30,7 +30,8 @@ router.route("/").get(async (req, res) => {
       quizzes = [],
       finalExams = [],
       labs = [],
-      projects = [];
+      projects = [],
+      totalPoints = filteredAssignments.length * 100;
     filteredAssignments.forEach((assignment) => {
       if (assignment.name.indexOf("Project:") !== -1) {
         if (assignment.name.indexOf("Lab") !== -1) {
@@ -50,11 +51,53 @@ router.route("/").get(async (req, res) => {
       }
     });
     if (labs.length === 0) {
-      labWeight = 25;
-      projectWeight = 25;
+      labWeight = 0.25;
+      projectWeight = 0.25;
     } else {
-      projectWeight = 50;
+      projectWeight = 0.5;
     }
+    const quizPoints = Math.round((totalPoints * quizWeight) / quizzes.length),
+      projectPoints = Math.round(
+        (totalPoints * projectWeight) / projects.length
+      ),
+      finalExamPoints = Math.round(totalPoints * finalExamWeight),
+      unitExamPoints = Math.round(
+        (totalPoints * unitExamWeight) / unitExams.length
+      ),
+      labPoints = labWeight
+        ? Math.round((totalPoints * labWeight) / labs.length)
+        : null;
+    quizzes.forEach((quiz) => {
+      quiz.points_possible = quizPoints;
+      assignments.push(quiz);
+    });
+    projects.forEach((project) => {
+      project.points_possible = projectPoints;
+      assignments.push(project);
+    });
+    finalExams[0].points_possible = finalExamPoints;
+    assignments.push(finalExams[0]);
+    unitExams.forEach((exam) => {
+      exam.points_possible = unitExamPoints;
+      assignments.push(exam);
+    });
+    if (labWeight) {
+      labs.forEach((lab) => {
+        lab.points_possible = labPoints;
+        assignments.push(lab);
+      });
+    }
+    assignments.sort((x, y) => {
+      return x.name - y.name;
+    });
+    res.status(200).json({
+      assignments,
+      labs,
+      quizzes,
+      finalExams,
+      unitExams,
+      projects,
+    });
   } catch (e) {
     res.status(400);
   }

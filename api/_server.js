@@ -12,6 +12,7 @@ const { MONGODB_URI } = require("./_utils/constants");
 
 const { router: courseRoutes } = require("./_routes/courseRoutes");
 const { router: assignmentRoutes } = require("./_routes/assignmentRoutes");
+const { router: userRoutes } = require("./_routes/userRoutes");
 
 // import routers above this line
 applyMiddleware(middleWare, router);
@@ -19,6 +20,7 @@ applyMiddleware(middleWare, router);
 // use routes below this line
 router.use("/api/courses", courseRoutes);
 router.use("/api/assignments", assignmentRoutes);
+router.use("/api/users", userRoutes);
 
 const server = http.createServer(router);
 

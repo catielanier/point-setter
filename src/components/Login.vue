@@ -1,5 +1,8 @@
 <template>
   <form @submit.prevent="login">
+    <p v-if="error">
+      <span>Error:</span> Invalid email and password combination.
+    </p>
     <input type="text" name="email" placeholder="Email" v-model="email" />
     <input
       type="password"
@@ -20,9 +23,11 @@ export default {
       email: "",
       password: "",
       loading: false,
-      success: false,
       error: null,
     };
+  },
+  props: {
+    setId: Function,
   },
   methods: {
     login: async function () {
@@ -38,6 +43,8 @@ export default {
         },
       });
       localStorage.setItem("icadPointId", res.data.data.id);
+      this.props.setId(res.data.data.id);
+      this.loading = false;
     },
   },
 };

@@ -1,22 +1,27 @@
 <template>
-  <Login v-if="!token" />
-  <HelloWorld msg="Welcome to Your Vue.js App" />
+  <Login v-if="!userId" :setId="setId" />
 </template>
 
 <script>
-import HelloWorld from "./components/HelloWorld.vue";
 import Login from "./components/Login.vue";
 
 export default {
   name: "App",
   data() {
     return {
-      token: null,
+      userId: null,
     };
   },
   components: {
-    HelloWorld,
     Login,
+  },
+  mounted() {
+    this.userId = localStorage.getItem("icadPointId");
+  },
+  methods: {
+    setId: function (id) {
+      this.userId = id;
+    },
   },
 };
 </script>

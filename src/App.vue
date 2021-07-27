@@ -1,9 +1,12 @@
 <template>
+  <h1>Point Setter</h1>
   <Login v-if="!userId" :setId="setId" />
+  <Setter v-else />
 </template>
 
 <script>
 import Login from "./components/Login.vue";
+import Setter from "./components/Setter.vue";
 
 export default {
   name: "App",
@@ -14,6 +17,7 @@ export default {
   },
   components: {
     Login,
+    Setter,
   },
   mounted() {
     this.userId = localStorage.getItem("icadPointId");
@@ -27,12 +31,16 @@ export default {
 </script>
 
 <style>
+body {
+  background: #2c3e50;
+}
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  font-size: 1.6rem;
   text-align: center;
-  color: #2c3e50;
+  color: white;
   margin-top: 60px;
 }
 </style>

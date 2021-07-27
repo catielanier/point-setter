@@ -1,17 +1,24 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <Login v-if="!token" />
+  <HelloWorld msg="Welcome to Your Vue.js App" />
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import HelloWorld from "./components/HelloWorld.vue";
+import Login from "./components/Login.vue";
 
 export default {
-  name: 'App',
+  name: "App",
+  data() {
+    return {
+      token: null,
+    };
+  },
   components: {
-    HelloWorld
-  }
-}
+    HelloWorld,
+    Login,
+  },
+};
 </script>
 
 <style>

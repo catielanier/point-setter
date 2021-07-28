@@ -108,7 +108,8 @@ router.route("/").get(async (req, res) => {
       quizzes,
       finalExams,
       unitExams,
-      projects,
+      discussions,
+      writingAssignments,
     });
   } catch (e) {
     res.status(400);

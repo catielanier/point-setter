@@ -7,11 +7,12 @@ const router = express.Router();
 router.route("/").get(async (req, res) => {
   const { apiKey: access_token, course } = req.query;
   try {
-    const unitExamWeight = 0.25,
-      quizWeight = 0.1,
+    const quizWeight = 0.1,
+      discussionWeight = 0.1,
       finalExamWeight = 0.15;
     let labWeight,
-      projectWeight,
+      unitExamWeight,
+      writingAssignmentWeight,
       assignments = [];
     const url = `https://icademymiddleeast.instructure.com/api/v1/courses/${course}/assignments`;
     const params = setParams(access_token, [], [], "position");
@@ -29,14 +30,17 @@ router.route("/").get(async (req, res) => {
       quizzes = [],
       finalExams = [],
       labs = [],
-      projects = [],
+      discussions = [],
+      writingAssignments = [],
       totalPoints = filteredAssignments.length * 100;
     filteredAssignments.forEach((assignment) => {
       if (assignment.name.indexOf("Project:") !== -1) {
         if (assignment.name.indexOf("Lab") !== -1) {
           labs.push(assignment);
+        } else if (assignment.name.indexOf("Writing Assignment") !== -1) {
+          writingAssignments.push(assignment);
         } else {
-          projects.push(assignment);
+          discussions.push(assignment);
         }
       }
       if (assignment.name.indexOf("Quiz") !== -1) {
@@ -51,28 +55,37 @@ router.route("/").get(async (req, res) => {
     });
     if (labs.length === 0) {
       labWeight = 0.25;
-      projectWeight = 0.25;
+      writingAssignmentWeight = 0.15;
+      unitExamWeight = 0.25;
     } else {
-      projectWeight = 0.5;
+      writingAssignmentWeight = 0.3;
+      unitExamWeight = 0.35;
     }
     const quizPoints = Math.round((totalPoints * quizWeight) / quizzes.length),
-      projectPoints = Math.round(
-        (totalPoints * projectWeight) / projects.length
+      discussionPoints = Math.round(
+        (totalPoints * discussionWeight) / discussions.length
       ),
       finalExamPoints = Math.round(totalPoints * finalExamWeight),
       unitExamPoints = Math.round(
         (totalPoints * unitExamWeight) / unitExams.length
       ),
-      labPoints = labWeight
-        ? Math.round((totalPoints * labWeight) / labs.length)
-        : null;
+      writingAssignmentPoints = Math.round(
+        (totalPoints * writingAssignmentWeight) / writingAssignments.length
+      );
+    labPoints = labWeight
+      ? Math.round((totalPoints * labWeight) / labs.length)
+      : null;
     quizzes.forEach((quiz) => {
       quiz.points_possible = quizPoints;
       assignments.push(quiz);
     });
-    projects.forEach((project) => {
-      project.points_possible = projectPoints;
+    discussions.forEach((project) => {
+      project.points_possible = discussionPoints;
       assignments.push(project);
+    });
+    writingAssignments.forEach((writingAssignment) => {
+      writingAssignment.points_possible = writingAssignmentPoints;
+      assignments.push(writingAssignment);
     });
     finalExams[0].points_possible = finalExamPoints;
     assignments.push(finalExams[0]);

@@ -1,7 +1,9 @@
 <template>
-  <h1>Point Setter</h1>
-  <Login v-if="!userId" :setId="setId" />
-  <Setter v-else />
+  <div>
+    <h1>Point Setter</h1>
+    <Login v-if="!userId" :setId="setId" />
+    <Setter v-else />
+  </div>
 </template>
 
 <script>

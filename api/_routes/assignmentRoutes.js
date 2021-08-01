@@ -10,10 +10,7 @@ router.route("/").get(async (req, res) => {
     const quizWeight = 0.1,
       discussionWeight = 0.1,
       finalExamWeight = 0.15;
-    let labWeight,
-      unitExamWeight,
-      writingAssignmentWeight,
-      assignments = [];
+    let labWeight, unitExamWeight, writingAssignmentWeight;
     const url = `https://icademymiddleeast.instructure.com/api/v1/courses/${course}/assignments`;
     const params = setParams(access_token, [], [], "position");
     const allAssignments = await apiPagination(url, params, []);
@@ -31,26 +28,51 @@ router.route("/").get(async (req, res) => {
       finalExams = [],
       labs = [],
       discussions = [],
+      drafts = [],
+      lessons = [],
       writingAssignments = [],
       totalPoints = filteredAssignments.length * 100;
     filteredAssignments.forEach((assignment) => {
-      if (assignment.name.indexOf("Project:") !== -1) {
-        if (assignment.name.indexOf("Lab") !== -1) {
-          labs.push(assignment);
-        } else if (assignment.name.indexOf("Writing Assignment") !== -1) {
-          writingAssignments.push(assignment);
+      if (assignment.name.indexOf("Lesson") !== -1) {
+        lessons.push(assignment);
+      } else {
+        if (
+          assignment.name.indexOf("Rough Draft") !== -1 ||
+          assignment.name.indexOf("1st Draft") !== -1
+        ) {
+          drafts.push(assignment);
         } else {
-          discussions.push(assignment);
+          if (assignment.name.indexOf("Lab") !== -1) {
+            labs.push(assignment);
+          }
+          if (
+            assignment.name.indexOf("Writing Assignment") !== -1 ||
+            assignment.name.indexOf("Writing") !== -1 ||
+            assignment.name.indexOf("Project") !== -1 ||
+            assignment.name.indexOf("Assignment") !== -1
+          ) {
+            writingAssignments.push(assignment);
+          }
+          if (
+            assignment.name.indexOf("Discussion") !== -1 ||
+            assignment.name.indexOf("Discuss") !== -1
+          ) {
+            discussions.push(assignment);
+          }
+          if (assignment.name.indexOf("Quiz") !== -1) {
+            quizzes.push(assignment);
+          }
+          if (
+            assignment.name.indexOf("Unit Exam") !== -1 ||
+            assignment.name.indexOf("Midterm") !== -1 ||
+            assignment.name.indexOf("Test") !== -1
+          ) {
+            unitExams.push(assignment);
+          }
+          if (assignment.name.indexOf("Final Exam") !== -1) {
+            finalExams.push(assignment);
+          }
         }
-      }
-      if (assignment.name.indexOf("Quiz") !== -1) {
-        quizzes.push(assignment);
-      }
-      if (assignment.name.indexOf("Unit Exam") !== -1) {
-        unitExams.push(assignment);
-      }
-      if (assignment.name.indexOf("Final Exam") !== -1) {
-        finalExams.push(assignment);
       }
     });
     if (labs.length === 0) {
@@ -81,35 +103,34 @@ router.route("/").get(async (req, res) => {
     });
     discussions.forEach((project) => {
       project.points_possible = discussionPoints;
-      assignments.push(project);
     });
     writingAssignments.forEach((writingAssignment) => {
       writingAssignment.points_possible = writingAssignmentPoints;
-      assignments.push(writingAssignment);
     });
     finalExams[0].points_possible = finalExamPoints;
-    assignments.push(finalExams[0]);
     unitExams.forEach((exam) => {
       exam.points_possible = unitExamPoints;
-      assignments.push(exam);
+    });
+    drafts.forEach((draft) => {
+      draft.points_possible = 0;
     });
     if (labWeight) {
       labs.forEach((lab) => {
         lab.points_possible = labPoints;
-        assignments.push(lab);
       });
     }
-    assignments.sort((x, y) => {
-      return x.name - y.name;
+    lessons.forEach((lesson) => {
+      lesson.points_possible = 0;
     });
     res.status(200).json({
-      assignments,
       labs,
       quizzes,
       finalExams,
       unitExams,
       discussions,
       writingAssignments,
+      drafts,
+      lessons,
     });
   } catch (e) {
     res.status(400);

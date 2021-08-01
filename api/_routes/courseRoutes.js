@@ -1,7 +1,6 @@
 const express = require("express");
 
 const { setParams, apiPagination } = require("../_helpers/pagination");
-console.log(apiPagination);
 
 const router = express.Router();
 

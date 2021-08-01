@@ -8,6 +8,14 @@
         @input="getCourses"
         placeholder="Select a teacher"
       />
+      <v-select
+        class="select-styles"
+        label="fullName"
+        :options="courses"
+        placeholder="Select a course"
+        v-if="courses.length !== 0"
+        @input="getAssignments"
+      />
     </div>
   </div>
 </template>
@@ -48,9 +56,10 @@ export default {
           },
         });
         const courses = [];
-        console.log(res);
         res.data.courses.forEach((course) => {
-          course.fullName = `${course.name} (${course.term.name})`;
+          course.fullName = course.term
+            ? `${course.name} (${course.term.name})`
+            : course.name;
           courses.push(course);
         });
         this.courses = courses;
@@ -58,7 +67,11 @@ export default {
         console.log(e);
       }
     },
-    getAssignments: async function () {},
+    getAssignments: async function (e) {
+      const { teacher: apiKey } = this.$data;
+      const { id: course } = e;
+      console.log(apiKey, course);
+    },
     submitPoints: async function () {},
   },
 };

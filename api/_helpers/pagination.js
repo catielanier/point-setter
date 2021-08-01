@@ -20,7 +20,6 @@ exports.setParams = function(
 const apiPagination = async function(url, params, array) {
   let lastLength = 0;
   do {
-    console.log(`running ${params.page}`);
     const results = await axios({
       method: "GET",
       url,

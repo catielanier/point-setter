@@ -180,6 +180,9 @@ export default {
       quizzes: [],
       preTests: [],
       speakingPractice: [],
+      success: true,
+      error: "",
+      loading: false,
     };
   },
   async mounted() {
@@ -191,6 +194,7 @@ export default {
   },
   methods: {
     getCourses: async function (e) {
+      this.loading = true;
       const { apiKey } = e;
       this.teacher = apiKey;
       try {
@@ -209,11 +213,14 @@ export default {
           courses.push(course);
         });
         this.courses = courses;
+        this.loading = false;
       } catch (e) {
         console.log(e);
+        this.loading = false;
       }
     },
     getAssignments: async function (e) {
+      this.loading = true;
       const { teacher: apiKey } = this.$data;
       const { id: course } = e;
       try {
@@ -248,11 +255,64 @@ export default {
         this.preTests = preTests;
         this.course = course;
         this.speakingPractice = speakingPractice;
+        this.loading = false;
       } catch (e) {
         console.log(e);
+        this.loading = false;
       }
     },
-    submitPoints: async function () {},
+    submitPoints: async function () {
+      this.success = false;
+      this.loading = true;
+      this.error = "";
+      const {
+        labs,
+        discussions,
+        classwork,
+        drafts,
+        unitExams,
+        finalExams,
+        quizzes,
+        lessons,
+        preTests,
+        course,
+        teacher: apiKey,
+        speakingPractice,
+      } = this.$data;
+      const assignments = [
+        ...labs,
+        ...discussions,
+        ...classwork,
+        ...drafts,
+        ...unitExams,
+        ...finalExams,
+        ...quizzes,
+        ...lessons,
+        ...preTests,
+        ...speakingPractice,
+      ];
+      try {
+        const res = await axios({
+          method: "PUT",
+          url: "/api/assignments",
+          data: {
+            apiKey,
+            course,
+            assignments,
+          },
+        });
+        if (res.returnedIds.length > 0) {
+          this.success = true;
+        } else {
+          this.error = "Assignments did not update.";
+          this.loading = false;
+        }
+      } catch (e) {
+        console.log(e);
+        this.error = "Assignments did not update.";
+        this.loading = false;
+      }
+    },
   },
 };
 </script>

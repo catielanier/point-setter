@@ -10,7 +10,7 @@ router.route("/").get(async (req, res) => {
     const quizWeight = 0.1,
       discussionWeight = 0.1,
       finalExamWeight = 0.15;
-    let labWeight, unitExamWeight, writingAssignmentWeight;
+    let labWeight, unitExamWeight, classworkWeight;
     const url = `https://icademymiddleeast.instructure.com/api/v1/courses/${course}/assignments`;
     const params = setParams(access_token, [], [], "position");
     const allAssignments = await apiPagination(url, params, []);
@@ -30,7 +30,8 @@ router.route("/").get(async (req, res) => {
       discussions = [],
       drafts = [],
       lessons = [],
-      writingAssignments = [],
+      classwork = [],
+      preTests = [],
       totalPoints = filteredAssignments.length * 100;
     filteredAssignments.forEach((assignment) => {
       if (assignment.name.indexOf("Lesson") !== -1) {
@@ -51,7 +52,7 @@ router.route("/").get(async (req, res) => {
             assignment.name.indexOf("Project") !== -1 ||
             assignment.name.indexOf("Assignment") !== -1
           ) {
-            writingAssignments.push(assignment);
+            classwork.push(assignment);
           }
           if (
             assignment.name.indexOf("Discussion") !== -1 ||
@@ -77,7 +78,7 @@ router.route("/").get(async (req, res) => {
     });
     if (labs.length === 0) {
       labWeight = 0.25;
-      writingAssignmentWeight = 0.15;
+      classworkWeight = 0.15;
       unitExamWeight = 0.25;
     } else {
       writingAssignmentWeight = 0.3;
@@ -91,7 +92,7 @@ router.route("/").get(async (req, res) => {
       unitExamPoints = Math.round(
         (totalPoints * unitExamWeight) / unitExams.length
       ),
-      writingAssignmentPoints = Math.round(
+      classworkPoints = Math.round(
         (totalPoints * writingAssignmentWeight) / writingAssignments.length
       );
     labPoints = labWeight
@@ -104,8 +105,8 @@ router.route("/").get(async (req, res) => {
     discussions.forEach((project) => {
       project.points_possible = discussionPoints;
     });
-    writingAssignments.forEach((writingAssignment) => {
-      writingAssignment.points_possible = writingAssignmentPoints;
+    classwork.forEach((writingAssignment) => {
+      writingAssignment.points_possible = classworkPoints;
     });
     finalExams[0].points_possible = finalExamPoints;
     unitExams.forEach((exam) => {
@@ -113,6 +114,9 @@ router.route("/").get(async (req, res) => {
     });
     drafts.forEach((draft) => {
       draft.points_possible = 0;
+    });
+    preTests.forEach((preTest) => {
+      preTest.points_possible = 0;
     });
     if (labWeight) {
       labs.forEach((lab) => {
@@ -128,9 +132,10 @@ router.route("/").get(async (req, res) => {
       finalExams,
       unitExams,
       discussions,
-      writingAssignments,
+      classwork,
       drafts,
       lessons,
+      preTests,
     });
   } catch (e) {
     res.status(400);

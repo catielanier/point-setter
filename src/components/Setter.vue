@@ -31,9 +31,14 @@ export default {
       courses: [],
       teacher: null,
       course: null,
-      assignments: [],
-      curriculumTypes: [],
-      curriculum: null,
+      lessons: [],
+      classwork: [],
+      labs: [],
+      discussions: [],
+      drafts: [],
+      unitExams: [],
+      finalExams: [],
+      quizzes: [],
     };
   },
   async mounted() {
@@ -71,6 +76,36 @@ export default {
       const { teacher: apiKey } = this.$data;
       const { id: course } = e;
       console.log(apiKey, course);
+      try {
+        const res = await axios({
+          method: "GET",
+          url: "/api/assignments",
+          params: {
+            apiKey,
+            course,
+          },
+        });
+        const {
+          labs,
+          discussions,
+          classwork,
+          drafts,
+          unitExams,
+          finalExams,
+          quizzes,
+          lessons,
+        } = res.data;
+        this.labs = labs;
+        this.discussions = discussions;
+        this.classwork = classwork;
+        this.drafts = drafts;
+        this.unitExams = unitExams;
+        this.finalExams = finalExams;
+        this.quizzes = quizzes;
+        this.lessons = lessons;
+      } catch (e) {
+        console.log(e);
+      }
     },
     submitPoints: async function () {},
   },

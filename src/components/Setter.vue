@@ -149,6 +149,7 @@
             />
           </div>
         </div>
+        <button type="submit" v-if="course">Submit Points</button>
       </div>
     </form>
   </div>
@@ -234,6 +235,7 @@ export default {
           quizzes,
           lessons,
           preTests,
+          speakingPractice,
         } = res.data;
         this.labs = labs;
         this.discussions = discussions;
@@ -245,6 +247,7 @@ export default {
         this.lessons = lessons;
         this.preTests = preTests;
         this.course = course;
+        this.speakingPractice = speakingPractice;
       } catch (e) {
         console.log(e);
       }
@@ -267,5 +270,10 @@ export default {
   max-width: 1080px;
   margin: 0 auto;
   text-align: left;
+}
+button {
+  width: 100%;
+  background: black;
+  color: wheat;
 }
 </style>

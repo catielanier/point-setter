@@ -31,8 +31,8 @@ router.route("/").get(async (req, res) => {
       drafts = [],
       lessons = [],
       classwork = [],
-      preTests = [],
-      totalPoints = filteredAssignments.length * 100;
+      speakingPractice = [];
+    (preTests = []), (totalPoints = filteredAssignments.length * 100);
     filteredAssignments.forEach((assignment) => {
       if (assignment.name.indexOf("Lesson") !== -1) {
         lessons.push(assignment);
@@ -81,6 +81,11 @@ router.route("/").get(async (req, res) => {
             assignment.name.toLowerCase().indexOf("pretest") !== -1
           ) {
             preTests.push(assignment);
+          }
+          if (
+            assignment.name.toLowerCase().indexOf("speaking practice") !== -1
+          ) {
+            speakingPractice.push(assignment);
           }
         }
       }
@@ -134,6 +139,9 @@ router.route("/").get(async (req, res) => {
     lessons.forEach((lesson) => {
       lesson.points_possible = 0;
     });
+    speakingPractice.forEach((practice) => {
+      practice.points_possible = 0;
+    });
     res.status(200).json({
       labs,
       quizzes,
@@ -144,6 +152,7 @@ router.route("/").get(async (req, res) => {
       drafts,
       lessons,
       preTests,
+      speakingPractice,
     });
   } catch (e) {
     res.status(400);

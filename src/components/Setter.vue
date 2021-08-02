@@ -17,14 +17,152 @@
         @input="getAssignments"
       />
     </div>
+    <form @submit.prevent="submitPoints">
+      <div class="points-container">
+        <div class="classwork" v-if="classwork.length > 0">
+          <h3>Classwork:</h3>
+          <div
+            class="assignment-container"
+            v-for="assignment in classwork"
+            :key="assignment.id"
+          >
+            <Assignment
+              :points="assignment.points_possible"
+              :title="assignment.name"
+            />
+          </div>
+        </div>
+        <div class="labs" v-if="labs.length > 0">
+          <h3>Labs:</h3>
+          <div
+            class="assignment-container"
+            v-for="assignment in labs"
+            :key="assignment.id"
+          >
+            <Assignment
+              :points="assignment.points_possible"
+              :title="assignment.name"
+            />
+          </div>
+        </div>
+        <div class="discussions" v-if="discussions.length > 0">
+          <h3>Discussions:</h3>
+          <div
+            class="assignment-container"
+            v-for="assignment in discussions"
+            :key="assignment.id"
+          >
+            <Assignment
+              :points="assignment.points_possible"
+              :title="assignment.name"
+            />
+          </div>
+        </div>
+        <div class="quizzes" v-if="quizzes.length > 0">
+          <h3>Quizzes:</h3>
+          <div
+            class="assignment-container"
+            v-for="assignment in quizzes"
+            :key="assignment.id"
+          >
+            <Assignment
+              :points="assignment.points_possible"
+              :title="assignment.name"
+            />
+          </div>
+        </div>
+        <div class="unit-exams" v-if="unitExams.length > 0">
+          <h3>Unit Exams:</h3>
+          <div
+            class="assignment-container"
+            v-for="assignment in unitExams"
+            :key="assignment.id"
+          >
+            <Assignment
+              :points="assignment.points_possible"
+              :title="assignment.name"
+            />
+          </div>
+        </div>
+        <div class="final-exams" v-if="finalExams.length > 0">
+          <h3>Final Exam:</h3>
+          <div
+            class="assignment-container"
+            v-for="assignment in finalExams"
+            :key="assignment.id"
+          >
+            <Assignment
+              :points="assignment.points_possible"
+              :title="assignment.name"
+            />
+          </div>
+        </div>
+        <div class="lessons" v-if="lessons.length > 0">
+          <h3>Lessons:</h3>
+          <div
+            class="assignment-container"
+            v-for="assignment in lessons"
+            :key="assignment.id"
+          >
+            <Assignment
+              :points="assignment.points_possible"
+              :title="assignment.name"
+            />
+          </div>
+        </div>
+        <div class="drafts" v-if="drafts.length > 0">
+          <h3>Drafts:</h3>
+          <div
+            class="assignment-container"
+            v-for="assignment in drafts"
+            :key="assignment.id"
+          >
+            <Assignment
+              :points="assignment.points_possible"
+              :title="assignment.name"
+            />
+          </div>
+        </div>
+        <div class="pretests" v-if="preTests.length > 0">
+          <h3>Pre-Tests:</h3>
+          <div
+            class="assignment-container"
+            v-for="assignment in preTests"
+            :key="assignment.id"
+          >
+            <Assignment
+              :points="assignment.points_possible"
+              :title="assignment.name"
+            />
+          </div>
+        </div>
+        <div class="speaking-practice" v-if="speakingPractice.length > 0">
+          <h3>Speaking Practice:</h3>
+          <div
+            class="assignment-container"
+            v-for="assignment in speakingPractice"
+            :key="assignment.id"
+          >
+            <Assignment
+              :points="assignment.points_possible"
+              :title="assignment.name"
+            />
+          </div>
+        </div>
+      </div>
+    </form>
   </div>
 </template>
 
 <script>
 import "vue-select/dist/vue-select.css";
 import axios from "axios";
+import Assignment from "./Assignment.vue";
 export default {
   name: "Setter",
+  components: {
+    Assignment,
+  },
   data() {
     return {
       teachers: [],
@@ -40,6 +178,7 @@ export default {
       finalExams: [],
       quizzes: [],
       preTests: [],
+      speakingPractice: [],
     };
   },
   async mounted() {

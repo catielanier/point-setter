@@ -1,5 +1,7 @@
 <template>
   <div class="setter-container">
+    <p v-if="success">Points set successfully</p>
+    <p class="error" v-if="error !== ''"><span>Error:</span> {{ error }}</p>
     <div class="dropdowns">
       <v-select
         class="select-styles"
@@ -180,7 +182,7 @@ export default {
       quizzes: [],
       preTests: [],
       speakingPractice: [],
-      success: true,
+      success: false,
       error: "",
       loading: false,
     };

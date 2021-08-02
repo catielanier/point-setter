@@ -263,4 +263,9 @@ export default {
   font-size: 1.2rem;
   margin-bottom: 15px;
 }
+.points-container {
+  max-width: 1080px;
+  margin: 0 auto;
+  text-align: left;
+}
 </style>

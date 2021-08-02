@@ -16,3 +16,10 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.grid-container {
+  display: grid;
+  grid-template-columns: 80% 20%;
+}
+</style>

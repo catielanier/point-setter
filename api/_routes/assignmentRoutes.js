@@ -38,40 +38,49 @@ router.route("/").get(async (req, res) => {
         lessons.push(assignment);
       } else {
         if (
-          assignment.name.indexOf("Rough Draft") !== -1 ||
-          assignment.name.indexOf("1st Draft") !== -1
+          assignment.name.toLowerCase().indexOf("rough draft") !== -1 ||
+          assignment.name.toLowerCase().indexOf("1st draft") !== -1
         ) {
           drafts.push(assignment);
         } else {
-          if (assignment.name.indexOf("Lab") !== -1) {
+          if (assignment.name.toLowerCase().indexOf("lab") !== -1) {
             labs.push(assignment);
           }
           if (
-            assignment.name.indexOf("Writing Assignment") !== -1 ||
-            assignment.name.indexOf("Writing") !== -1 ||
-            assignment.name.indexOf("Project") !== -1 ||
-            assignment.name.indexOf("Assignment") !== -1
+            assignment.name.toLowerCase().indexOf("writing assignment") !==
+              -1 ||
+            assignment.name.toLowerCase().indexOf("writing") !== -1 ||
+            assignment.name.toLowerCase().indexOf("project") !== -1 ||
+            assignment.name.toLowerCase().indexOf("assignment") !== -1 ||
+            assignment.name.toLowerCase().indexOf("activity") !== -1 ||
+            assignment.name.toLowerCase().indexOf("essay") !== -1
           ) {
             classwork.push(assignment);
           }
           if (
-            assignment.name.indexOf("Discussion") !== -1 ||
-            assignment.name.indexOf("Discuss") !== -1
+            assignment.name.toLowerCase().indexOf("discussion") !== -1 ||
+            assignment.name.toLowerCase().indexOf("discuss") !== -1
           ) {
             discussions.push(assignment);
           }
-          if (assignment.name.indexOf("Quiz") !== -1) {
+          if (assignment.name.toLowerCase().indexOf("quiz") !== -1) {
             quizzes.push(assignment);
           }
           if (
-            assignment.name.indexOf("Unit Exam") !== -1 ||
-            assignment.name.indexOf("Midterm") !== -1 ||
-            assignment.name.indexOf("Test") !== -1
+            assignment.name.toLowerCase().indexOf("unit exam") !== -1 ||
+            assignment.name.toLowerCase().indexOf("midterm") !== -1 ||
+            assignment.name.toLowerCase().indexOf("test") !== -1
           ) {
             unitExams.push(assignment);
           }
-          if (assignment.name.indexOf("Final Exam") !== -1) {
+          if (assignment.name.toLowerCase().indexOf("final exam") !== -1) {
             finalExams.push(assignment);
+          }
+          if (
+            assignment.name.toLowerCase().indexOf("pre-test") !== -1 ||
+            assignment.name.toLowerCase().indexOf("pretest") !== -1
+          ) {
+            preTests.push(assignment);
           }
         }
       }
@@ -93,14 +102,13 @@ router.route("/").get(async (req, res) => {
         (totalPoints * unitExamWeight) / unitExams.length
       ),
       classworkPoints = Math.round(
-        (totalPoints * writingAssignmentWeight) / writingAssignments.length
+        (totalPoints * classworkWeight) / classwork.length
       );
     labPoints = labWeight
       ? Math.round((totalPoints * labWeight) / labs.length)
       : null;
     quizzes.forEach((quiz) => {
       quiz.points_possible = quizPoints;
-      assignments.push(quiz);
     });
     discussions.forEach((project) => {
       project.points_possible = discussionPoints;

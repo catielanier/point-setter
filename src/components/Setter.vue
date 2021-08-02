@@ -39,6 +39,7 @@ export default {
       unitExams: [],
       finalExams: [],
       quizzes: [],
+      preTests: [],
     };
   },
   async mounted() {
@@ -75,7 +76,6 @@ export default {
     getAssignments: async function (e) {
       const { teacher: apiKey } = this.$data;
       const { id: course } = e;
-      console.log(apiKey, course);
       try {
         const res = await axios({
           method: "GET",
@@ -94,6 +94,7 @@ export default {
           finalExams,
           quizzes,
           lessons,
+          preTests,
         } = res.data;
         this.labs = labs;
         this.discussions = discussions;
@@ -103,6 +104,8 @@ export default {
         this.finalExams = finalExams;
         this.quizzes = quizzes;
         this.lessons = lessons;
+        this.preTests = preTests;
+        this.course = course;
       } catch (e) {
         console.log(e);
       }
@@ -119,5 +122,6 @@ export default {
 }
 .select-styles {
   font-size: 1.2rem;
+  margin-bottom: 15px;
 }
 </style>

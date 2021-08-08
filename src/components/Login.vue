@@ -60,19 +60,20 @@ input {
   border-radius: 3px;
   padding: 10px 5px;
   margin-bottom: 18px;
-  color: white;
+  color: black;
   border-bottom: 2px solid white;
 }
 input::placeholder {
-  color: lightgrey;
+  color: gray;
 }
 button {
-  background: lightblue;
+  background: white;
   color: #2c3e50;
   border: 0;
   border-radius: 3px;
   width: 100%;
   padding: 10px 5px;
   cursor: pointer;
+  margin: 0 auto;
 }
 </style>

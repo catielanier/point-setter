@@ -104,7 +104,14 @@ router.route("/").get(async (req, res) => {
       const totalDiscussionPoints = discussions.length * 20;
       totalPoints = totalDiscussionPoints * 20;
     } else {
-      totalPoints = filteredAssignments.length * 100;
+      totalPoints =
+        (quizzes.length +
+          finalExams.length +
+          unitExams.length +
+          classwork.length +
+          labs.length) *
+        100;
+      console.log(totalPoints);
       classworkWeight += 0.05;
     }
     const quizPoints = Math.round((totalPoints * quizWeight) / quizzes.length),
@@ -145,6 +152,7 @@ router.route("/").get(async (req, res) => {
     speakingPractice.forEach((practice) => {
       practice.points_possible = 0;
     });
+    console.log(totalPoints, filteredAssignments.length);
     res.status(200).json({
       labs,
       quizzes,

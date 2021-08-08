@@ -8,22 +8,20 @@ router.route("/").get(async (req, res) => {
   const { apiKey: access_token, course } = req.query;
   try {
     const quizWeight = 0.1,
-      discussionWeight = 0.1,
-      finalExamWeight = 0.15;
-    let labWeight, unitExamWeight, classworkWeight;
-    const url = `https://icademymiddleeast.instructure.com/api/v1/courses/${course}/assignments`;
-    const params = setParams(access_token, [], [], "position");
-    const allAssignments = await apiPagination(url, params, []);
-    const regex = /([A-Za-z\s])/;
-    const filteredAssignments = allAssignments.filter((assignment) => {
-      return (
-        !regex.test(assignment.name.charAt(0)) &&
-        assignment.published === true &&
-        assignment.name.indexOf("Extra Credit") === -1 &&
-        assignment.name.indexOf("Bonus") === -1
-      );
-    });
-    const unitExams = [],
+      finalExamWeight = 0.15,
+      url = `https://icademymiddleeast.instructure.com/api/v1/courses/${course}/assignments`,
+      params = setParams(access_token, [], [], "position"),
+      allAssignments = await apiPagination(url, params, []),
+      regex = /([A-Za-z\s])/,
+      filteredAssignments = allAssignments.filter((assignment) => {
+        return (
+          !regex.test(assignment.name.charAt(0)) &&
+          assignment.published === true &&
+          assignment.name.indexOf("Extra Credit") === -1 &&
+          assignment.name.indexOf("Bonus") === -1
+        );
+      }),
+      unitExams = [],
       quizzes = [],
       finalExams = [],
       labs = [],
@@ -31,8 +29,9 @@ router.route("/").get(async (req, res) => {
       drafts = [],
       lessons = [],
       classwork = [],
-      speakingPractice = [];
-    (preTests = []), (totalPoints = filteredAssignments.length * 100);
+      speakingPractice = [],
+      preTests = [];
+    let labWeight, unitExamWeight, classworkWeight, totalPoints;
     filteredAssignments.forEach((assignment) => {
       if (assignment.name.indexOf("Lesson") !== -1) {
         lessons.push(assignment);
@@ -92,16 +91,23 @@ router.route("/").get(async (req, res) => {
     });
     if (labs.length === 0) {
       labWeight = 0.25;
-      classworkWeight = 0.15;
+      classworkWeight = 0.2;
       unitExamWeight = 0.25;
     } else {
-      writingAssignmentWeight = 0.3;
+      classworkWeight = 0.35;
       unitExamWeight = 0.35;
     }
+    if (discussions.length > 0) {
+      discussions.forEach((discussion) => {
+        discussion.points_possible = 20;
+      });
+      const totalDiscussionPoints = discussions.length * 20;
+      totalPoints = totalDiscussionPoints * 20;
+    } else {
+      totalPoints = filteredAssignments.length * 100;
+      classworkWeight += 0.05;
+    }
     const quizPoints = Math.round((totalPoints * quizWeight) / quizzes.length),
-      discussionPoints = Math.round(
-        (totalPoints * discussionWeight) / discussions.length
-      ),
       finalExamPoints = Math.round(totalPoints * finalExamWeight),
       unitExamPoints = Math.round(
         (totalPoints * unitExamWeight) / unitExams.length
@@ -114,9 +120,6 @@ router.route("/").get(async (req, res) => {
       : null;
     quizzes.forEach((quiz) => {
       quiz.points_possible = quizPoints;
-    });
-    discussions.forEach((project) => {
-      project.points_possible = discussionPoints;
     });
     classwork.forEach((writingAssignment) => {
       writingAssignment.points_possible = classworkPoints;
@@ -163,26 +166,26 @@ router.route("/").put(async (req, res) => {
   const { apiKey: access_token, course, assignments } = req.body.data;
   try {
     const returnedIds = [];
-    assignments.forEach(assignment => {
+    assignments.forEach(async (assignment) => {
       await axios({
-        method: 'PUT',
+        method: "PUT",
         url: `https://icademymiddleeast.instructure.com/api/v1/courses/${course}/assignments/${assignment.id}`,
         params: {
-          access_token
+          access_token,
         },
         data: {
           assignment: {
-            points_possible: assignment.points_possible
-          }
-        }
-      })
-      returnedIds.push(assignment.id)
-    })
+            points_possible: assignment.points_possible,
+          },
+        },
+      });
+      returnedIds.push(assignment.id);
+    });
     res.status(201).json({
-      returnedIds
-    })
+      returnedIds,
+    });
   } catch (e) {
-    res.status(401)
+    res.status(401);
   }
 });
 

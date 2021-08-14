@@ -1,0 +1,31 @@
+{
+  "alias": "icad-point-setter",
+  "name": "icad-point-setter",
+  "env": {
+    "PORT": "4000",
+    "SECRET": "@secret_points",
+    "MONGODB_URI": "@mongodb_uri_points"
+  },
+  "routes": [
+    {
+      "src": "/",
+      "dest": "index.html"
+    },
+    {
+      "src": "/api/users/(.+)",
+      "dest": "/api/users.js"
+    },
+    {
+      "src": "/api/teachers/(.+)",
+      "dest": "/api/teachers.js"
+    },
+    {
+      "src": "/api/courses/(.+)",
+      "dest": "/api/courses.js"
+    },
+    {
+      "src": "/api/assignments/(.+)",
+      "dest": "/api/assignments.js"
+    }
+  ]
+}

@@ -151,7 +151,14 @@
             />
           </div>
         </div>
-        <button type="submit" v-if="course">Submit Points</button>
+        <div class="button-container">
+          <div>
+            <button type="submit" v-if="course">Submit Points</button>
+          </div>
+          <div>
+            <button v-if="course">Reset Points</button>
+          </div>
+        </div>
       </div>
     </form>
   </div>
@@ -315,6 +322,53 @@ export default {
         this.loading = false;
       }
     },
+    resetPoints: async function () {
+      this.error = null;
+      this.loading = true;
+      this.success = false;
+      const {
+        labs,
+        discussions,
+        classwork,
+        unitExams,
+        finalExams,
+        quizzes,
+        course,
+        teacher: apiKey,
+      } = this.$data;
+      const assignments = [
+        ...labs,
+        ...discussions,
+        ...classwork,
+        ...unitExams,
+        ...finalExams,
+        ...quizzes,
+      ];
+      assignments.forEach((assignment) => {
+        assignment.points_possible = 100;
+      });
+      try {
+        const res = await axios({
+          method: "PUT",
+          url: "/api/assignments",
+          data: {
+            apiKey,
+            course,
+            assignments,
+          },
+        });
+        if (res.returnedIds.length > 0) {
+          this.success = true;
+        } else {
+          this.error = "Assignments did not update.";
+          this.loading = false;
+        }
+      } catch (e) {
+        console.log(e);
+        this.error = "Assignments did not update";
+        this.loading = false;
+      }
+    },
   },
 };
 </script>
@@ -333,9 +387,18 @@ export default {
   margin: 0 auto;
   text-align: left;
 }
-button {
+button[type="submit"] {
   width: 100%;
   background: black;
   color: wheat;
+}
+button:not([type="submit"]) {
+  width: 100%;
+  border: 1px solid black;
+  color: black;
+}
+.button-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
 }
 </style>

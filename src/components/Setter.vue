@@ -1,5 +1,6 @@
 <template>
   <div class="setter-container">
+    <div v-if="loading" class="loading-spinner" :aria-busy="loading" />
     <p v-if="success">Points set successfully</p>
     <p class="error" v-if="error !== ''"><span>Error:</span> {{ error }}</p>
     <div class="dropdowns">
@@ -400,5 +401,33 @@ button:not([type="submit"]) {
 .button-container {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
+}
+.setter-container {
+  position: relative;
+}
+@keyframes rotation {
+  from {
+    transform: rotateZ(0deg);
+  }
+  to {
+    transform: rotateZ(360deg);
+  }
+}
+.loading-spinner {
+  position: fixed;
+  top: 15px;
+  right: 15px;
+  width: 20px;
+  height: 20px;
+  border-radius: 20px;
+  border-top: 3px solid black;
+  border-right: 3px solid darkgrey;
+  border-bottom: 3px solid lightgrey;
+  border-left: 3px solid white;
+  z-index: 5;
+  background: wheat;
+}
+.loading-spinner[aria-busy="true"] {
+  animation: rotation 0.5s linear infinite;
 }
 </style>

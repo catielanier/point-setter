@@ -52,7 +52,8 @@ router.route("/").get(async (req, res) => {
           if (
             (assignment.name.toLowerCase().indexOf("lab") !== -1 &&
               assignment.name.toLowerCase().indexOf("labor") === -1) ||
-            assignment.name.toLowerCase().indexOf("project") !== -1
+            (assignment.name.toLowerCase().indexOf("project") !== -1 &&
+              assignment.name.toLowerCase().indexOf("writing") === -1)
           ) {
             labs.push(assignment);
           }
@@ -63,7 +64,8 @@ router.route("/").get(async (req, res) => {
               assignment.name.toLowerCase().indexOf("assignment") !== -1 ||
               assignment.name.toLowerCase().indexOf("activity") !== -1 ||
               assignment.name.toLowerCase().indexOf("essay") !== -1) &&
-            assignment.name.toLowerCase().indexOf("final exam") === -1
+            assignment.name.toLowerCase().indexOf("final exam") === -1 &&
+            assignment.name.toLowerCase().indexOf("discussion") === -1
           ) {
             classwork.push(assignment);
           }
@@ -108,6 +110,7 @@ router.route("/").get(async (req, res) => {
         }
       }
     });
+    console.log(labs.length);
     if (labs.length !== 0) {
       labWeight = 0.25;
       classworkWeight = 0.2;
@@ -168,7 +171,7 @@ router.route("/").get(async (req, res) => {
     speakingPractice.forEach((practice) => {
       practice.points_possible = 0;
     });
-    const labsTotal = labs[0].points_possible * labs.length,
+    const labsTotal = labs.length ? labs[0].points_possible * labs.length : 0,
       classworkTotal = classwork[0].points_possible * classwork.length,
       discussionsTotal = 20 * discussions.length,
       quizzesTotal = quizzes[0].points_possible * quizzes.length,

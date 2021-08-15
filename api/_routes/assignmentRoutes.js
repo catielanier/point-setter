@@ -121,7 +121,9 @@ router.route("/").get(async (req, res) => {
       classworkWeight += 0.05;
     }
     const quizPoints = Math.round((totalPoints * quizWeight) / quizzes.length),
-      finalExamPoints = Math.round(totalPoints * finalExamWeight),
+      finalExamPoints = Math.round(
+        (totalPoints * finalExamWeight) / finalExams.length
+      ),
       unitExamPoints = Math.round(
         (totalPoints * unitExamWeight) / unitExams.length
       ),
@@ -137,7 +139,9 @@ router.route("/").get(async (req, res) => {
     classwork.forEach((writingAssignment) => {
       writingAssignment.points_possible = classworkPoints;
     });
-    finalExams[0].points_possible = finalExamPoints;
+    finalExams.forEach((exam) => {
+      exam.points_possible = finalExamPoints;
+    });
     unitExams.forEach((exam) => {
       exam.points_possible = unitExamPoints;
     });

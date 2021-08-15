@@ -425,7 +425,7 @@ button:not([type="submit"]) {
   border-bottom: 3px solid lightgrey;
   border-left: 3px solid white;
   z-index: 5;
-  background: wheat;
+  background: none;
 }
 .loading-spinner[aria-busy="true"] {
   animation: rotation 0.5s linear infinite;

@@ -362,8 +362,9 @@ export default {
             assignments,
           },
         });
-        if (res.returnedIds.length > 0) {
+        if (res.data.returnedIds.length > 0) {
           this.success = true;
+          this.loading = false
         } else {
           this.error = "Assignments did not update.";
           this.loading = false;
@@ -409,8 +410,9 @@ export default {
             assignments,
           },
         });
-        if (res.returnedIds.length > 0) {
+        if (res.data.returnedIds.length > 0) {
           this.success = true;
+          this.loading = false;
         } else {
           this.error = "Assignments did not update.";
           this.loading = false;

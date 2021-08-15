@@ -1,4 +1,5 @@
 const express = require("express");
+const axios = require("axios");
 
 const { setParams, apiPagination } = require("../_helpers/pagination");
 
@@ -203,11 +204,11 @@ router.route("/").get(async (req, res) => {
 });
 
 router.route("/").put(async (req, res) => {
-  const { apiKey: access_token, course, assignments } = req.body.data;
+  const { apiKey: access_token, course, assignments } = req.body;
   try {
     const returnedIds = [];
-    assignments.forEach(async (assignment) => {
-      await axios({
+    const promises = await assignments.map((assignment) => {
+      return axios({
         method: "PUT",
         url: `https://icademymiddleeast.instructure.com/api/v1/courses/${course}/assignments/${assignment.id}`,
         params: {
@@ -219,10 +220,14 @@ router.route("/").put(async (req, res) => {
           },
         },
       });
-      returnedIds.push(assignment.id);
     });
-    res.status(201).json({
-      returnedIds,
+    Promise.all(promises).then((values) => {
+      values.forEach((_, index) => {
+        returnedIds.push(assignments[index].id);
+      });
+      res.status(201).json({
+        returnedIds,
+      });
     });
   } catch (e) {
     res.status(401);

@@ -40,7 +40,7 @@ body {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  font-size: 1.6rem;
+  font-size: 1.2rem;
   text-align: center;
   color: black;
   margin-top: 60px;

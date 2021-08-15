@@ -385,22 +385,30 @@ export default {
 }
 .points-container {
   max-width: 1080px;
-  margin: 0 auto;
+  margin: 0 auto 15px;
   text-align: left;
 }
-button[type="submit"] {
+.button-container button[type="submit"] {
   width: 100%;
   background: black;
   color: wheat;
+  padding: 10px 15px;
+  border: 0;
 }
-button:not([type="submit"]) {
+.button-container button:not([type="submit"]) {
   width: 100%;
   border: 1px solid black;
   color: black;
+  background: wheat;
+  padding: 10px 15px;
 }
 .button-container {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
+  grid-gap: 20px;
+}
+.lessons {
+  margin-bottom: 15px;
 }
 .setter-container {
   position: relative;

@@ -31,7 +31,10 @@ router.route("/").get(async (req, res) => {
       classwork = [],
       speakingPractice = [],
       preTests = [];
-    let labWeight, unitExamWeight, classworkWeight, totalPoints;
+    let labWeight,
+      unitExamWeight,
+      classworkWeight,
+      totalPoints = 1000;
     filteredAssignments.forEach((assignment) => {
       if (
         assignment.name.toLowerCase().indexOf("lesson") !== -1 &&
@@ -46,23 +49,28 @@ router.route("/").get(async (req, res) => {
         ) {
           drafts.push(assignment);
         } else {
-          if (assignment.name.toLowerCase().indexOf("lab") !== -1) {
+          if (
+            assignment.name.toLowerCase().indexOf("lab") !== -1 ||
+            assignment.name.toLowerCase().indexOf("project") !== -1
+          ) {
             labs.push(assignment);
           }
           if (
-            assignment.name.toLowerCase().indexOf("writing assignment") !==
+            (assignment.name.toLowerCase().indexOf("writing assignment") !==
               -1 ||
-            assignment.name.toLowerCase().indexOf("writing") !== -1 ||
-            assignment.name.toLowerCase().indexOf("project") !== -1 ||
-            assignment.name.toLowerCase().indexOf("assignment") !== -1 ||
-            assignment.name.toLowerCase().indexOf("activity") !== -1 ||
-            assignment.name.toLowerCase().indexOf("essay") !== -1
+              assignment.name.toLowerCase().indexOf("writing") !== -1 ||
+              assignment.name.toLowerCase().indexOf("assignment") !== -1 ||
+              assignment.name.toLowerCase().indexOf("activity") !== -1 ||
+              assignment.name.toLowerCase().indexOf("essay") !== -1) &&
+            assignment.name.toLowerCase().indexOf("final exam") === -1
           ) {
             classwork.push(assignment);
           }
           if (
             assignment.name.toLowerCase().indexOf("discussion") !== -1 ||
-            assignment.name.toLowerCase().indexOf("discuss") !== -1
+            assignment.name.toLowerCase().indexOf("discuss") !== -1 ||
+            assignment.name.toLowerCase().indexOf("art talk") !== -1 ||
+            assignment.name.toLowerCase().indexOf("art forum") !== -1
           ) {
             discussions.push(assignment);
           }
@@ -99,7 +107,7 @@ router.route("/").get(async (req, res) => {
         }
       }
     });
-    if (labs.length === 0) {
+    if (labs.length !== 0) {
       labWeight = 0.25;
       classworkWeight = 0.2;
       unitExamWeight = 0.25;
@@ -114,14 +122,7 @@ router.route("/").get(async (req, res) => {
       const totalDiscussionPoints = discussions.length * 20;
       totalPoints = totalDiscussionPoints * 20;
     } else {
-      totalPoints =
-        (quizzes.length +
-          finalExams.length +
-          unitExams.length +
-          classwork.length +
-          labs.length) *
-        100;
-      console.log(totalPoints);
+      totalPoints = 1000;
       classworkWeight += 0.05;
     }
     const quizPoints = Math.round((totalPoints * quizWeight) / quizzes.length),
@@ -166,7 +167,6 @@ router.route("/").get(async (req, res) => {
     speakingPractice.forEach((practice) => {
       practice.points_possible = 0;
     });
-    console.log(totalPoints, filteredAssignments.length);
     res.status(200).json({
       labs,
       quizzes,

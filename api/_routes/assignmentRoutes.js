@@ -50,7 +50,8 @@ router.route("/").get(async (req, res) => {
           drafts.push(assignment);
         } else {
           if (
-            assignment.name.toLowerCase().indexOf("lab") !== -1 ||
+            (assignment.name.toLowerCase().indexOf("lab") !== -1 &&
+              assignment.name.toLowerCase().indexOf("labor") === -1) ||
             assignment.name.toLowerCase().indexOf("project") !== -1
           ) {
             labs.push(assignment);
@@ -167,6 +168,13 @@ router.route("/").get(async (req, res) => {
     speakingPractice.forEach((practice) => {
       practice.points_possible = 0;
     });
+    const labsTotal = labs[0].points_possible * labs.length,
+      classworkTotal = classwork[0].points_possible * classwork.length,
+      discussionsTotal = 20 * discussions.length,
+      quizzesTotal = quizzes[0].points_possible * quizzes.length,
+      unitExamsTotal = unitExams[0].points_possible * unitExams.length,
+      finalExamsTotal = finalExams[0].points_possible * finalExams.length;
+
     res.status(200).json({
       labs,
       quizzes,
@@ -178,6 +186,13 @@ router.route("/").get(async (req, res) => {
       lessons,
       preTests,
       speakingPractice,
+      totalPoints,
+      labsTotal,
+      classworkTotal,
+      discussionsTotal,
+      quizzesTotal,
+      unitExamsTotal,
+      finalExamsTotal,
     });
   } catch (e) {
     res.status(400);

@@ -34,6 +34,10 @@
               :title="assignment.name"
             />
           </div>
+          <SubTotal
+            :totalPoints="classworkTotal"
+            :percentage="Math.round((classworkTotal / totalPoints) * 100)"
+          />
         </div>
         <div class="labs" v-if="labs.length > 0">
           <h3>Labs:</h3>
@@ -47,6 +51,10 @@
               :title="assignment.name"
             />
           </div>
+          <SubTotal
+            :totalPoints="labsTotal"
+            :percentage="Math.round((labsTotal / totalPoints) * 100)"
+          />
         </div>
         <div class="discussions" v-if="discussions.length > 0">
           <h3>Discussions:</h3>
@@ -60,6 +68,10 @@
               :title="assignment.name"
             />
           </div>
+          <SubTotal
+            :totalPoints="discussionsTotal"
+            :percentage="Math.round((discussionsTotal / totalPoints) * 100)"
+          />
         </div>
         <div class="quizzes" v-if="quizzes.length > 0">
           <h3>Quizzes:</h3>
@@ -73,6 +85,10 @@
               :title="assignment.name"
             />
           </div>
+          <SubTotal
+            :totalPoints="quizzesTotal"
+            :percentage="Math.round((quizzesTotal / totalPoints) * 100)"
+          />
         </div>
         <div class="unit-exams" v-if="unitExams.length > 0">
           <h3>Unit Exams:</h3>
@@ -86,6 +102,10 @@
               :title="assignment.name"
             />
           </div>
+          <SubTotal
+            :totalPoints="unitExamsTotal"
+            :percentage="Math.round((unitExamsTotal / totalPoints) * 100)"
+          />
         </div>
         <div class="final-exams" v-if="finalExams.length > 0">
           <h3>Final Exam:</h3>
@@ -99,6 +119,10 @@
               :title="assignment.name"
             />
           </div>
+          <SubTotal
+            :totalPoints="finalExamsTotal"
+            :percentage="Math.round((finalExamsTotal / totalPoints) * 100)"
+          />
         </div>
         <div class="lessons" v-if="lessons.length > 0">
           <h3>Lessons:</h3>
@@ -152,6 +176,10 @@
             />
           </div>
         </div>
+        <div class="totals" v-if="totalPoints !== null">
+          <h3>Total:</h3>
+          <Assignment :points="totalPoints" title="Total points" />
+        </div>
         <div class="button-container">
           <div>
             <button type="submit" v-if="course">Submit Points</button>
@@ -169,10 +197,12 @@
 import "vue-select/dist/vue-select.css";
 import axios from "axios";
 import Assignment from "./Assignment.vue";
+import SubTotal from "./SubTotal.vue";
 export default {
   name: "Setter",
   components: {
     Assignment,
+    SubTotal,
   },
   data() {
     return {
@@ -193,6 +223,13 @@ export default {
       success: false,
       error: "",
       loading: false,
+      totalPoints: null,
+      labsTotal: null,
+      classworkTotal: null,
+      discussionsTotal: null,
+      unitExamsTotal: null,
+      finalExamsTotal: null,
+      quizzesTotal: null,
     };
   },
   async mounted() {
@@ -253,6 +290,13 @@ export default {
           lessons,
           preTests,
           speakingPractice,
+          totalPoints,
+          labsTotal,
+          discussionsTotal,
+          quizzesTotal,
+          unitExamsTotal,
+          classworkTotal,
+          finalExamsTotal,
         } = res.data;
         this.labs = labs;
         this.discussions = discussions;
@@ -265,6 +309,13 @@ export default {
         this.preTests = preTests;
         this.course = course;
         this.speakingPractice = speakingPractice;
+        this.totalPoints = totalPoints;
+        this.labsTotal = labsTotal;
+        this.discussionsTotal = discussionsTotal;
+        this.quizzesTotal = quizzesTotal;
+        this.unitExamsTotal = unitExamsTotal;
+        this.classworkTotal = classworkTotal;
+        this.finalExamsTotal = finalExamsTotal;
         this.loading = false;
       } catch (e) {
         console.log(e);
@@ -406,9 +457,7 @@ export default {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   grid-gap: 20px;
-}
-.lessons {
-  margin-bottom: 15px;
+  margin-top: 15px;
 }
 .setter-container {
   position: relative;

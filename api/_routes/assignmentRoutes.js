@@ -66,9 +66,15 @@ router.route("/").get(async (req, res) => {
             quizzes.push(assignment);
           }
           if (
-            assignment.name.toLowerCase().indexOf("unit exam") !== -1 ||
             assignment.name.toLowerCase().indexOf("midterm") !== -1 ||
             assignment.name.toLowerCase().indexOf("test") !== -1
+          ) {
+            unitExams.push(assignment);
+          }
+          if (
+            assignment.name.toLowerCase().indexOf("exam") !== -1 &&
+            assignment.name.toLowerCase().indexOf("unit") !== -1 &&
+            assignment.name.toLowerCase().indexOf("review") === -1
           ) {
             unitExams.push(assignment);
           }

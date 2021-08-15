@@ -33,7 +33,11 @@ router.route("/").get(async (req, res) => {
       preTests = [];
     let labWeight, unitExamWeight, classworkWeight, totalPoints;
     filteredAssignments.forEach((assignment) => {
-      if (assignment.name.indexOf("Lesson") !== -1) {
+      if (
+        assignment.name.toLowerCase().indexOf("lesson") !== -1 &&
+        assignment.name.toLowerCase().indexOf("activity") === -1 &&
+        assignment.name.toLowerCase().indexOf("discussion") === -1
+      ) {
         lessons.push(assignment);
       } else {
         if (

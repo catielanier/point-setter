@@ -242,6 +242,7 @@ export default {
   methods: {
     getCourses: async function (e) {
       this.loading = true;
+      this.error = "";
       const { apiKey } = e;
       this.teacher = apiKey;
       try {
@@ -264,10 +265,12 @@ export default {
       } catch (e) {
         console.log(e);
         this.loading = false;
+        this.error = "Unable to get courses";
       }
     },
     getAssignments: async function (e) {
       this.loading = true;
+      this.error = "";
       const { teacher: apiKey } = this.$data;
       const { id: course } = e;
       try {
@@ -320,6 +323,7 @@ export default {
       } catch (e) {
         console.log(e);
         this.loading = false;
+        this.error = "Unable to get assignments";
       }
     },
     submitPoints: async function () {
@@ -364,7 +368,7 @@ export default {
         });
         if (res.data.returnedIds.length > 0) {
           this.success = true;
-          this.loading = false
+          this.loading = false;
         } else {
           this.error = "Assignments did not update.";
           this.loading = false;

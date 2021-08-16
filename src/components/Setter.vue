@@ -255,8 +255,8 @@ export default {
         const courses = [];
         res.data.courses.forEach((course) => {
           course.fullName = course.term
-            ? `${course.name} (${course.term.name})`
-            : course.name;
+            ? `${course.name} (${course.term.name} - ${course.id}) `
+            : `${course.name} (${course.id})`;
           courses.push(course);
         });
         this.courses = courses;

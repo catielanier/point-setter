@@ -198,6 +198,7 @@ import "vue-select/dist/vue-select.css";
 import axios from "axios";
 import Assignment from "./Assignment.vue";
 import SubTotal from "./SubTotal.vue";
+import { delay } from "q";
 export default {
   name: "Setter",
   components: {
@@ -357,16 +358,21 @@ export default {
         ...speakingPractice,
       ];
       try {
-        const res = await axios({
-          method: "PUT",
-          url: "/api/assignments",
-          data: {
-            apiKey,
-            course,
-            assignments,
-          },
-        });
-        if (res.data.returnedIds.length > 0) {
+        const returnedIds = [];
+        for (let i = 0; i < assignments.length; i++) {
+          const res = await axios({
+            method: "PUT",
+            url: "/api/assignments",
+            data: {
+              apiKey,
+              course,
+              assignment: assignments[i],
+            },
+          });
+          returnedIds.push(res.data.returnedId);
+          await delay(100);
+        }
+        if (returnedIds.length === assignments.length) {
           this.success = true;
           this.loading = false;
         } else {
@@ -405,16 +411,21 @@ export default {
         assignment.points_possible = 100;
       });
       try {
-        const res = await axios({
-          method: "PUT",
-          url: "/api/assignments",
-          data: {
-            apiKey,
-            course,
-            assignments,
-          },
-        });
-        if (res.data.returnedIds.length > 0) {
+        const returnedIds = [];
+        for (let i = 0; i < assignments.length; i++) {
+          const res = await axios({
+            method: "PUT",
+            url: "/api/assignments",
+            data: {
+              apiKey,
+              course,
+              assignment: assignments[i],
+            },
+          });
+          returnedIds.push(res.data.returnedId);
+          await delay(100);
+        }
+        if (returnedIds.length === assignments.length) {
           this.success = true;
           this.loading = false;
         } else {
@@ -423,7 +434,7 @@ export default {
         }
       } catch (e) {
         console.log(e);
-        this.error = "Assignments did not update";
+        this.error = "Assignments did not update.";
         this.loading = false;
       }
     },

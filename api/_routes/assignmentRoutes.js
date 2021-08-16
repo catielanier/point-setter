@@ -219,30 +219,23 @@ router.route("/").get(async (req, res) => {
 });
 
 router.route("/").put(async (req, res) => {
-  const { apiKey: access_token, course, assignments } = req.body;
+  const { apiKey: access_token, course, assignment } = req.body;
   try {
-    const returnedIds = [];
-    const promises = await assignments.map((assignment) => {
-      return axios({
-        method: "PUT",
-        url: `https://icademymiddleeast.instructure.com/api/v1/courses/${course}/assignments/${assignment.id}`,
-        params: {
-          access_token,
+    const _ = await axios({
+      method: "PUT",
+      url: `https://icademymiddleeast.instructure.com/api/v1/courses/${course}/assignments/${assignment.id}`,
+      params: {
+        access_token,
+      },
+      data: {
+        assignment: {
+          points_possible: assignment.points_possible,
         },
-        data: {
-          assignment: {
-            points_possible: assignment.points_possible,
-          },
-        },
-      });
+      },
     });
-    Promise.all(promises).then((values) => {
-      values.forEach((_, index) => {
-        returnedIds.push(assignments[index].id);
-      });
-      res.status(201).json({
-        returnedIds,
-      });
+    const returnedId = assignment.id;
+    res.status(201).json({
+      returnedId,
     });
   } catch (e) {
     res.status(401);

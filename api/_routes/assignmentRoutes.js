@@ -8,9 +8,7 @@ const router = express.Router();
 router.route("/").get(async (req, res) => {
   const { apiKey: access_token, course } = req.query;
   try {
-    const quizWeight = 0.1,
-      finalExamWeight = 0.15,
-      url = `https://icademymiddleeast.instructure.com/api/v1/courses/${course}/assignments`,
+    const url = `https://icademymiddleeast.instructure.com/api/v1/courses/${course}/assignments`,
       params = setParams(access_token, [], [], "position"),
       allAssignments = await apiPagination(url, params, []),
       regex = /([A-Za-z\s])/,
@@ -33,6 +31,8 @@ router.route("/").get(async (req, res) => {
       speakingPractice = [],
       preTests = [];
     let labWeight,
+      quizWeight = 0.1,
+      finalExamWeight = 0.15,
       unitExamWeight,
       classworkWeight,
       totalPoints = 1000;
@@ -118,6 +118,14 @@ router.route("/").get(async (req, res) => {
     } else {
       classworkWeight = 0.35;
       unitExamWeight = 0.35;
+    }
+    if (finalExams.length === 0) {
+      classworkWeight += finalExamWeight;
+      finalExamWeight = 0;
+    }
+    if (unitExams.length === 0) {
+      quizWeight += unitExamWeight;
+      unitExamWeight = 0;
     }
     if (discussions.length > 0) {
       discussions.forEach((discussion) => {

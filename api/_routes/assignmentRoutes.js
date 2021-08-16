@@ -111,7 +111,6 @@ router.route("/").get(async (req, res) => {
         }
       }
     });
-    console.log(labs.length);
     if (labs.length !== 0) {
       labWeight = 0.25;
       classworkWeight = 0.2;
@@ -173,11 +172,19 @@ router.route("/").get(async (req, res) => {
       practice.points_possible = 0;
     });
     const labsTotal = labs.length ? labs[0].points_possible * labs.length : 0,
-      classworkTotal = classwork[0].points_possible * classwork.length,
-      discussionsTotal = 20 * discussions.length,
-      quizzesTotal = quizzes[0].points_possible * quizzes.length,
-      unitExamsTotal = unitExams[0].points_possible * unitExams.length,
-      finalExamsTotal = finalExams[0].points_possible * finalExams.length;
+      classworkTotal = classwork.length
+        ? classwork[0].points_possible * classwork.length
+        : 0,
+      discussionsTotal = discussions.length ? 20 * discussions.length : 0,
+      quizzesTotal = quizzes.length
+        ? quizzes[0].points_possible * quizzes.length
+        : 0,
+      unitExamsTotal = unitExams.length
+        ? unitExams[0].points_possible * unitExams.length
+        : 0,
+      finalExamsTotal = finalExams.length
+        ? finalExams[0].points_possible * finalExams.length
+        : 0;
 
     res.status(200).json({
       labs,

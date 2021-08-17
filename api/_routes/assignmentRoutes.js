@@ -120,8 +120,8 @@ router.route("/").get(async (req, res) => {
       discussions = [];
     }
     if (labs.length !== 0) {
-      labWeight = 0.25;
-      classworkWeight = 0.2;
+      labWeight = classwork.length ? 0.25 : 0.45;
+      classworkWeight = classwork.length ? 0.2 : null;
       unitExamWeight = 0.25;
     } else {
       classworkWeight = 0.35;

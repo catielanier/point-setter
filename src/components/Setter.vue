@@ -185,7 +185,9 @@
             <button type="submit" v-if="course">Submit Points</button>
           </div>
           <div>
-            <button v-if="course">Reset Points</button>
+            <button v-if="course" @click.prevent="resetPoints">
+              Reset Points
+            </button>
           </div>
         </div>
       </div>
@@ -407,12 +409,10 @@ export default {
         ...finalExams,
         ...quizzes,
       ];
-      assignments.forEach((assignment) => {
-        assignment.points_possible = 100;
-      });
       try {
         const returnedIds = [];
         for (let i = 0; i < assignments.length; i++) {
+          assignments[i].points_possible = 100;
           const res = await axios({
             method: "PUT",
             url: "/api/assignments",

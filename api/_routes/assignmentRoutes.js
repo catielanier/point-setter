@@ -54,7 +54,9 @@ router.route("/").get(async (req, res) => {
             (assignment.name.toLowerCase().indexOf("lab") !== -1 &&
               assignment.name.toLowerCase().indexOf("labor") === -1) ||
             (assignment.name.toLowerCase().indexOf("project") !== -1 &&
-              assignment.name.toLowerCase().indexOf("writing") === -1)
+              assignment.name.toLowerCase().indexOf("writing") === -1) ||
+            assignment.name.toLowerCase().indexOf("essay") !== -1 ||
+            assignment.name.toLowerCase().indexOf("research paper") !== -1
           ) {
             labs.push(assignment);
           }
@@ -63,8 +65,7 @@ router.route("/").get(async (req, res) => {
               -1 ||
               assignment.name.toLowerCase().indexOf("writing") !== -1 ||
               assignment.name.toLowerCase().indexOf("assignment") !== -1 ||
-              assignment.name.toLowerCase().indexOf("activity") !== -1 ||
-              assignment.name.toLowerCase().indexOf("essay") !== -1) &&
+              assignment.name.toLowerCase().indexOf("activity") !== -1) &&
             assignment.name.toLowerCase().indexOf("final exam") === -1 &&
             assignment.name.toLowerCase().indexOf("discussion") === -1
           ) {

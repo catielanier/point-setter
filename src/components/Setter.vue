@@ -244,6 +244,7 @@ export default {
   },
   methods: {
     getCourses: async function (e) {
+      this.success = false;
       this.loading = true;
       this.error = "";
       const { apiKey } = e;
@@ -272,6 +273,7 @@ export default {
       }
     },
     getAssignments: async function (e) {
+      this.success = false;
       this.loading = true;
       this.error = "";
       const { teacher: apiKey } = this.$data;

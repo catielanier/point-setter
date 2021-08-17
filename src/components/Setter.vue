@@ -1,7 +1,7 @@
 <template>
   <div class="setter-container">
     <div v-if="loading" class="loading-spinner" :aria-busy="loading" />
-    <p v-if="success">Points set successfully</p>
+    <p v-if="success" class="success">Points set successfully</p>
     <p class="error" v-if="error !== ''"><span>Error:</span> {{ error }}</p>
     <div class="dropdowns">
       <v-select
@@ -503,5 +503,13 @@ export default {
 }
 .loading-spinner[aria-busy="true"] {
   animation: rotation 0.5s linear infinite;
+}
+.error span {
+  color: red;
+  font-weight: bold;
+}
+.success {
+  font-weight: bold;
+  color: green;
 }
 </style>

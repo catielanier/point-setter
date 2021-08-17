@@ -63,7 +63,9 @@ router.route("/").get(async (req, res) => {
           if (
             (assignment.name.toLowerCase().indexOf("writing assignment") !==
               -1 ||
-              assignment.name.toLowerCase().indexOf("writing") !== -1 ||
+              (assignment.name.toLowerCase().indexOf("writing") !== -1 &&
+                assignment.name.toLowerCase().indexOf("research paper") ===
+                  -1) ||
               assignment.name.toLowerCase().indexOf("assignment") !== -1 ||
               assignment.name.toLowerCase().indexOf("activity") !== -1) &&
             assignment.name.toLowerCase().indexOf("final exam") === -1 &&

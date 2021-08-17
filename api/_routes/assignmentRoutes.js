@@ -24,10 +24,8 @@ router.route("/").get(async (req, res) => {
       quizzes = [],
       finalExams = [],
       labs = [],
-      discussions = [],
       drafts = [],
       lessons = [],
-      classwork = [],
       speakingPractice = [],
       preTests = [];
     let labWeight,
@@ -35,6 +33,8 @@ router.route("/").get(async (req, res) => {
       finalExamWeight = 0.15,
       unitExamWeight,
       classworkWeight,
+      discussions = [],
+      classwork = [],
       totalPoints = 1000;
     filteredAssignments.forEach((assignment) => {
       if (
@@ -111,6 +111,10 @@ router.route("/").get(async (req, res) => {
         }
       }
     });
+    if (discussions.length && discussions.length >= 30) {
+      classwork = [...classwork, ...discussions];
+      discussions = [];
+    }
     if (labs.length !== 0) {
       labWeight = 0.25;
       classworkWeight = 0.2;

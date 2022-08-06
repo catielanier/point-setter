@@ -5,8 +5,10 @@ const { setParams, apiPagination } = require("../_helpers/pagination");
 
 const router = express.Router();
 
+const { API_KEY: access_token } = require("../_utils/constants");
+
 router.route("/").get(async (req, res) => {
-  const { apiKey: access_token, course } = req.query;
+  const { course } = req.query;
   try {
     const url = `https://icademymiddleeast.instructure.com/api/v1/courses/${course}/assignments`,
       params = setParams(access_token, [], [], "position"),
@@ -227,7 +229,7 @@ router.route("/").get(async (req, res) => {
 });
 
 router.route("/").put(async (req, res) => {
-  const { apiKey: access_token, course, assignment } = req.body;
+  const { course, assignment } = req.body;
   try {
     const _ = await axios({
       method: "PUT",

@@ -7,13 +7,6 @@
       <v-select
         class="select-styles"
         label="fullName"
-        :options="teachers"
-        @input="getCourses"
-        placeholder="Select a teacher"
-      />
-      <v-select
-        class="select-styles"
-        label="fullName"
         :options="courses"
         placeholder="Select a course"
         v-if="courses.length !== 0"
@@ -209,9 +202,7 @@ export default {
   },
   data() {
     return {
-      teachers: [],
       courses: [],
-      teacher: null,
       course: null,
       lessons: [],
       classwork: [],
@@ -236,54 +227,40 @@ export default {
     };
   },
   async mounted() {
-    const res = await axios.get("/api/teachers");
-    res.data.data.forEach((teacher) => {
-      teacher.fullName = `${teacher.lastName}, ${teacher.firstName} (${teacher.designation})`;
-    });
-    this.teachers = res.data.data;
+    this.success = false;
+    this.loading = true;
+    this.error = "";
+    try {
+      const res = await axios({
+        method: "GET",
+        url: "/api/courses",
+      });
+      const courses = [];
+      res.data.courses.forEach((course) => {
+        course.fullName = course.term
+          ? `${course.name} (${course.term.name} - ${course.id}) `
+          : `${course.name} (${course.id})`;
+        courses.push(course);
+      });
+      this.courses = courses;
+      this.loading = false;
+    } catch (e) {
+      console.log(e);
+      this.loading = false;
+      this.error = "Unable to get courses";
+    }
   },
   methods: {
-    getCourses: async function (e) {
+    getAssignments: async function(e) {
       this.success = false;
       this.loading = true;
       this.error = "";
-      const { apiKey } = e;
-      this.teacher = apiKey;
-      try {
-        const res = await axios({
-          method: "GET",
-          url: "/api/courses",
-          params: {
-            apiKey,
-          },
-        });
-        const courses = [];
-        res.data.courses.forEach((course) => {
-          course.fullName = course.term
-            ? `${course.name} (${course.term.name} - ${course.id}) `
-            : `${course.name} (${course.id})`;
-          courses.push(course);
-        });
-        this.courses = courses;
-        this.loading = false;
-      } catch (e) {
-        console.log(e);
-        this.loading = false;
-        this.error = "Unable to get courses";
-      }
-    },
-    getAssignments: async function (e) {
-      this.success = false;
-      this.loading = true;
-      this.error = "";
-      const { teacher: apiKey } = this.$data;
       const { id: course } = e;
       try {
         const res = await axios({
           method: "GET",
           url: "/api/assignments",
           params: {
-            apiKey,
             course,
           },
         });
@@ -331,7 +308,7 @@ export default {
         this.error = "Unable to get assignments";
       }
     },
-    submitPoints: async function () {
+    submitPoints: async function() {
       this.success = false;
       this.loading = true;
       this.error = "";
@@ -346,7 +323,6 @@ export default {
         lessons,
         preTests,
         course,
-        teacher: apiKey,
         speakingPractice,
       } = this.$data;
       const assignments = [
@@ -368,7 +344,6 @@ export default {
             method: "PUT",
             url: "/api/assignments",
             data: {
-              apiKey,
               course,
               assignment: assignments[i],
             },
@@ -389,7 +364,7 @@ export default {
         this.loading = false;
       }
     },
-    resetPoints: async function () {
+    resetPoints: async function() {
       this.error = null;
       this.loading = true;
       this.success = false;
@@ -401,7 +376,6 @@ export default {
         finalExams,
         quizzes,
         course,
-        teacher: apiKey,
       } = this.$data;
       const assignments = [
         ...labs,
@@ -419,7 +393,6 @@ export default {
             method: "PUT",
             url: "/api/assignments",
             data: {
-              apiKey,
               course,
               assignment: assignments[i],
             },

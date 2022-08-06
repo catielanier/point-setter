@@ -2,10 +2,11 @@ const express = require("express");
 
 const { setParams, apiPagination } = require("../_helpers/pagination");
 
+const { API_KEY: access_token } = require("../_utils/constants");
+
 const router = express.Router();
 
 router.route("/").get(async (req, res) => {
-  const { apiKey: access_token } = req.query;
   try {
     const state = ["available", "unpublished"];
     const include = ["term"];

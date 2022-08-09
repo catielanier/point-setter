@@ -4,7 +4,9 @@
   "env": {
     "PORT": "4000",
     "SECRET": "@secret_points",
-    "MONGODB_URI": "@mongodb_uri_points"
+    "MONGODB_URI": "@mongodb_uri_points",
+    "API_KEY": "@api_key_points",
+    "ACCOUNT_NO": "@account_no_points"
   },
   "routes": [
     {

@@ -33,7 +33,7 @@ const apiPagination = async function(url, params, array) {
     });
     lastLength = results.data.length;
     params.page += 1;
-  } while (lastLength % 100 === 0);
+  } while (lastLength % 100 === 0 && lastLength !== 0);
   return array;
 };
 

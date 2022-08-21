@@ -3,17 +3,21 @@ const express = require("express");
 const http = require("http");
 const mongoose = require("mongoose");
 
+require("dotenv").config();
+const path = require("path");
+
+const { PORT, MONGODB_URI } = require("./api/_utils/constants");
+
 const router = express();
 
-const middleWare = require("./_middleware");
+const middleWare = require("./api/_middleware");
 
-const { applyMiddleware } = require("./_utils");
-const { MONGODB_URI } = require("./_utils/constants");
+const { applyMiddleware } = require("./api/_utils");
 
-const { router: courseRoutes } = require("./_routes/courseRoutes");
-const { router: assignmentRoutes } = require("./_routes/assignmentRoutes");
-const { router: userRoutes } = require("./_routes/userRoutes");
-const { router: teacherRoutes } = require("./_routes/teacherRoutes");
+const { router: courseRoutes } = require("./api/_routes/courseRoutes");
+const { router: assignmentRoutes } = require("./api/_routes/assignmentRoutes");
+const { router: userRoutes } = require("./api/_routes/userRoutes");
+const { router: teacherRoutes } = require("./api/_routes/teacherRoutes");
 
 // import routers above this line
 applyMiddleware(middleWare, router);
@@ -23,13 +27,14 @@ router.use("/api/courses", courseRoutes);
 router.use("/api/assignments", assignmentRoutes);
 router.use("/api/users", userRoutes);
 router.use("/api/teachers", teacherRoutes);
+router.use("/", express.static(path.join(__dirname, "./dist")));
 
 const server = http.createServer(router);
 
 mongoose
   .connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => {
-    server.listen(4000, () => {
+    server.listen(PORT, () => {
       console.log(`server running on port 4000`);
     });
   })

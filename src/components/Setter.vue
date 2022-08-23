@@ -264,7 +264,7 @@ export default {
             course,
           },
         });
-        const { filteredAssignments } = res.data;
+        const { assignments: filteredAssignments } = res.data;
         const unitExams = [],
           quizzes = [],
           finalExams = [],

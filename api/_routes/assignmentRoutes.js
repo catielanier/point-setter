@@ -53,7 +53,6 @@ router.route("/").get(async (req, res) => {
             page: currentPage,
           },
         });
-        console.log(assignmentRes.data.length);
         assignmentRes.data.forEach((assignment) => {
           const index = assignment.name.indexOf("Extra Credit");
           const index2 = assignment.name.indexOf("Bonus");
@@ -74,7 +73,6 @@ router.route("/").get(async (req, res) => {
       }
       apiPagination();
     }
-    console.log(assignments.length);
     res.status(200).json({
       assignments,
     });
@@ -88,7 +86,7 @@ router.route("/").put(async (req, res) => {
   try {
     const _ = await axios({
       method: "PUT",
-      url: `https://icademymiddleeast.instructure.com/api/v1/courses/${course}/assignments/${assignment.id}`,
+      url: `https://vpa.instructure.com/api/v1/courses/${course}/assignments/${assignment.id}`,
       params: {
         access_token,
       },

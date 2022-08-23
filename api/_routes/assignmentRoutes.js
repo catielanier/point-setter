@@ -26,18 +26,16 @@ router.route("/").get(async (req, res) => {
       const index = assignment.name.indexOf("Extra Credit");
       const index2 = assignment.name.indexOf("Bonus");
       const index3 = assignment.name.indexOf("Get Started");
+      const index4 = assignment.name.indexOf("Resubmission");
       const isPublished = assignment.published;
-      console.log(isPublished);
       const isNumbered = !regex.test(assignment.name.charAt(0));
       const isExtraCredit =
-        assignment.name.includes(index) ||
-        assignment.name.includes(index2) ||
-        assignment.name.includes(index3);
+        index !== -1 || index2 !== -1 || index3 !== -1 || index4 !== -1;
       if (isPublished && isNumbered && !isExtraCredit) {
-        console.log("pushing");
         assignments.push(assignment);
       }
     });
+    console.log(results.data.length);
     if (results.data.length === 100) {
       let currentPage = 2;
       async function apiPagination() {
@@ -55,26 +53,26 @@ router.route("/").get(async (req, res) => {
             page: currentPage,
           },
         });
-        await assignmentRes.data.forEach((assignment) => {
+        console.log(assignmentRes.data.length);
+        assignmentRes.data.forEach((assignment) => {
           const index = assignment.name.indexOf("Extra Credit");
           const index2 = assignment.name.indexOf("Bonus");
           const index3 = assignment.name.indexOf("Get Started");
+          const index4 = assignment.name.indexOf("Resubmission");
           const isPublished = assignment.published;
           const isNumbered = !regex.test(assignment.name.charAt(0));
           const isExtraCredit =
-            assignment.name.includes(index) ||
-            assignment.name.includes(index2) ||
-            assignment.name.includes(index3);
+            index !== -1 || index2 !== -1 || index3 !== -1 || index4 !== -1;
           if (isPublished && isNumbered && !isExtraCredit) {
             assignments.push(assignment);
           }
         });
         if (assignmentRes.data.length === 100) {
           currentPage += 1;
-          await apiPagination();
+          apiPagination();
         }
       }
-      await apiPagination();
+      apiPagination();
     }
     console.log(assignments.length);
     res.status(200).json({

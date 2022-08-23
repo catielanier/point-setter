@@ -3,10 +3,10 @@ const express = require("express");
 const http = require("http");
 const mongoose = require("mongoose");
 
-require("dotenv").config();
 const path = require("path");
+require("dotenv").config();
 
-const { PORT, MONGODB_URI } = require("./api/_utils/constants");
+const { PORT, MONGODB_URI, ENVIRONMENT } = require("./api/_utils/constants");
 
 const router = express();
 
@@ -34,7 +34,7 @@ const server = http.createServer(router);
 mongoose
   .connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => {
-    server.listen(PORT, () => {
+    server.listen(ENVIRONMENT === "prod" ? PORT : 4000, () => {
       console.log(`server running on port 4000`);
     });
   })

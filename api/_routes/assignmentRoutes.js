@@ -35,7 +35,6 @@ router.route("/").get(async (req, res) => {
         assignments.push(assignment);
       }
     });
-    console.log(results.data.length);
     if (results.data.length === 100) {
       let currentPage = 2;
       async function apiPagination() {
@@ -48,7 +47,6 @@ router.route("/").get(async (req, res) => {
           params: {
             access_token,
             per_page: 100,
-            include: ["overrides", "observed_users"],
             order_by: "position",
             page: currentPage,
           },
@@ -68,10 +66,10 @@ router.route("/").get(async (req, res) => {
         });
         if (assignmentRes.data.length === 100) {
           currentPage += 1;
-          apiPagination();
+          await apiPagination();
         }
       }
-      apiPagination();
+      await apiPagination();
     }
     res.status(200).json({
       assignments,

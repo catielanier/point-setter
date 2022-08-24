@@ -82,21 +82,21 @@ router.route("/").get(async (req, res) => {
 });
 
 router.route("/").put(async (req, res) => {
-  const { course, assignment } = req.body;
+  const { course, assignmentId, points } = req.body;
   try {
     const _ = await axios({
       method: "PUT",
-      url: `https://vpa.instructure.com/api/v1/courses/${course}/assignments/${assignment.id}`,
+      url: `https://vpa.instructure.com/api/v1/courses/${course}/assignments/${assignmentId}`,
       params: {
         access_token,
       },
       data: {
         assignment: {
-          points_possible: assignment.points_possible,
+          points_possible: points,
         },
       },
     });
-    const returnedId = assignment.id;
+    const returnedId = assignmentId;
     res.status(201).json({
       returnedId,
     });

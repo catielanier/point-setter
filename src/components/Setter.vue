@@ -513,11 +513,12 @@ export default {
             url: "/api/assignments",
             data: {
               course,
-              assignment: assignments[i],
+              assignmentId: assignments[i].id,
+              points: assignments[i].points_possible,
             },
           });
           returnedIds.push(res.data.returnedId);
-          await delay(1000);
+          await delay(1500);
         }
         if (returnedIds.length === assignments.length) {
           this.success = true;

@@ -517,7 +517,7 @@ export default {
             },
           });
           returnedIds.push(res.data.returnedId);
-          await delay(100);
+          await delay(1000);
         }
         if (returnedIds.length === assignments.length) {
           this.success = true;

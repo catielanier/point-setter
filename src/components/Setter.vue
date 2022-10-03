@@ -282,11 +282,22 @@ export default {
           classwork = [],
           totalPoints = 1000;
         filteredAssignments.forEach((assignment) => {
-          if (
-            assignment.name.toLowerCase().indexOf("lesson") !== -1 &&
-            assignment.name.toLowerCase().indexOf("activity") === -1 &&
-            assignment.name.toLowerCase().indexOf("discussion") === -1
-          ) {
+          const lessonIndex = assignment.name.toLowerCase().indexOf("lesson");
+          const activityIndex = assignment.name
+            .toLowerCase()
+            .indexOf(" activity");
+          const discussionIndex = assignment.name
+            .toLowerCase()
+            .indexOf("discussion");
+          const isLessonWithActivity =
+            lessonIndex !== -1 &&
+            activityIndex !== -1 &&
+            lessonIndex < activityIndex;
+          const isLessonWithoutActivity =
+            lessonIndex !== -1 &&
+            activityIndex === -1 &&
+            discussionIndex === -1;
+          if (isLessonWithActivity || isLessonWithoutActivity) {
             lessons.push(assignment);
           } else {
             if (

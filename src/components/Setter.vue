@@ -289,6 +289,7 @@ export default {
           const discussionIndex = assignment.name
             .toLowerCase()
             .indexOf("discussion");
+          const projectIndex = assignment.name.toLowerCase().indexOf("project");
           const isLessonWithActivity =
             lessonIndex !== -1 &&
             activityIndex !== -1 &&
@@ -297,7 +298,18 @@ export default {
             lessonIndex !== -1 &&
             activityIndex === -1 &&
             discussionIndex === -1;
-          if (isLessonWithActivity || isLessonWithoutActivity) {
+          const isProjectWithActivity =
+            activityIndex !== -1 && projectIndex !== -1;
+          console.log({
+            name: assignment.name,
+            isLessonWithActivity,
+            isLessonWithoutActivity,
+            isProjectWithActivity,
+          });
+          if (
+            (isLessonWithActivity || isLessonWithoutActivity) &&
+            !isProjectWithActivity
+          ) {
             lessons.push(assignment);
           } else {
             if (
@@ -310,7 +322,8 @@ export default {
                 (assignment.name.toLowerCase().indexOf("lab") !== -1 &&
                   assignment.name.toLowerCase().indexOf("labor") === -1) ||
                 (assignment.name.toLowerCase().indexOf("project") !== -1 &&
-                  assignment.name.toLowerCase().indexOf("writing") === -1) ||
+                  assignment.name.toLowerCase().indexOf("writing") === -1 &&
+                  !isProjectWithActivity) ||
                 assignment.name.toLowerCase().indexOf("essay") !== -1 ||
                 assignment.name.toLowerCase().indexOf("research paper") !== -1
               ) {
@@ -324,7 +337,8 @@ export default {
                       -1 &&
                     assignment.name.toLowerCase().indexOf("essay") === -1) ||
                   assignment.name.toLowerCase().indexOf("assignment") !== -1 ||
-                  assignment.name.toLowerCase().indexOf("activity") !== -1) &&
+                  assignment.name.toLowerCase().indexOf("activity") !== -1 ||
+                  isProjectWithActivity) &&
                 assignment.name.toLowerCase().indexOf("final exam") === -1 &&
                 assignment.name.toLowerCase().indexOf("discussion") === -1
               ) {

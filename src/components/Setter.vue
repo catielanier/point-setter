@@ -3,7 +3,7 @@
     <div v-if="loading" class="loading-spinner" :aria-busy="loading" />
     <p v-if="success" class="success">Points set successfully</p>
     <p class="error" v-if="error !== ''"><span>Error:</span> {{ error }}</p>
-    <div class="dropdowns">
+    <!-- <div class="dropdowns">
       <v-select
         class="select-styles"
         label="fullName"
@@ -12,7 +12,12 @@
         v-if="courses.length !== 0"
         @input="getAssignments"
       />
-    </div>
+    </div> -->
+    <form @submit.prevent="getAssignments">
+
+    <input type="text" name="course" v-model="course" placeholder="Input a course ID">
+    <button type="submit">Get Assignments</button>
+    </form>
     <form @submit.prevent="submitPoints">
       <div class="points-container">
         <div class="classwork" v-if="classwork.length > 0">
@@ -173,12 +178,12 @@
           <h3>Total:</h3>
           <Assignment :points="totalPoints" title="Total points" />
         </div>
-        <div class="button-container">
+        <div class="button-container" v-if="areAssignmentsLoaded">
           <div>
-            <button type="submit" v-if="course">Submit Points</button>
+            <button type="submit">Submit Points</button>
           </div>
           <div>
-            <button v-if="course" @click.prevent="resetPoints">
+            <button @click.prevent="resetPoints">
               Reset Points
             </button>
           </div>
@@ -204,6 +209,7 @@ export default {
     return {
       courses: [],
       course: null,
+      areAssignmentsLoaded: false,
       lessons: [],
       classwork: [],
       labs: [],
@@ -226,36 +232,37 @@ export default {
       quizzesTotal: null,
     };
   },
-  async mounted() {
-    this.success = false;
-    this.loading = true;
-    this.error = "";
-    try {
-      const res = await axios({
-        method: "GET",
-        url: "/api/courses",
-      });
-      const courses = [];
-      res.data.data.forEach((course) => {
-        course.fullName = course.term
-          ? `${course.name} (${course.term.name} - ${course.id}) `
-          : `${course.name} (${course.id})`;
-        courses.push(course);
-      });
-      this.courses = courses;
-      this.loading = false;
-    } catch (e) {
-      console.log(e);
-      this.loading = false;
-      this.error = "Unable to get courses";
-    }
-  },
+  // TODO: Uncomment later when terms and fallback are implemented
+  // async mounted() {
+  //   this.success = false;
+  //   this.loading = true;
+  //   this.error = "";
+  //   try {
+  //     const res = await axios({
+  //       method: "GET",
+  //       url: "/api/courses",
+  //     });
+  //     const courses = [];
+  //     res.data.data.forEach((course) => {
+  //       course.fullName = course.term
+  //         ? `${course.name} (${course.term.name} - ${course.id}) `
+  //         : `${course.name} (${course.id})`;
+  //       courses.push(course);
+  //     });
+  //     this.courses = courses;
+  //     this.loading = false;
+  //   } catch (e) {
+  //     console.log(e);
+  //     this.loading = false;
+  //     this.error = "Unable to get courses";
+  //   }
+  // },
   methods: {
     getAssignments: async function(e) {
       this.success = false;
       this.loading = true;
       this.error = "";
-      const { id: course } = e;
+      const course = e.id || this.$data.course;
       try {
         const res = await axios({
           method: "GET",
@@ -495,6 +502,7 @@ export default {
         this.classworkTotal = classworkTotal;
         this.finalExamsTotal = finalExamsTotal;
         this.loading = false;
+        this.areAssignmentsLoaded = true;
       } catch (e) {
         console.log(e);
         this.loading = false;

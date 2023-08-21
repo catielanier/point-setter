@@ -27,10 +27,12 @@
             v-for="assignment in classwork"
             :key="assignment.id"
           >
-            <Assignment
-              :points="assignment.points_possible"
-              :title="assignment.name"
-            />
+            <div class="assignment-grid-container">
+              <div>
+                <p>{{ assignment.name }}</p>
+              </div>
+              <div><input type="number" name="points" v-model="assignment.points_possible" /></div>
+            </div>
           </div>
           <SubTotal
             :totalPoints="classworkTotal"
@@ -44,10 +46,12 @@
             v-for="assignment in labs"
             :key="assignment.id"
           >
-            <Assignment
-              :points="assignment.points_possible"
-              :title="assignment.name"
-            />
+            <div class="assignment-grid-container">
+              <div>
+                <p>{{ assignment.name }}</p>
+              </div>
+              <div><input type="number" name="points" v-model="assignment.points_possible" /></div>
+            </div>
           </div>
           <SubTotal
             :totalPoints="labsTotal"
@@ -61,10 +65,12 @@
             v-for="assignment in discussions"
             :key="assignment.id"
           >
-            <Assignment
-              :points="assignment.points_possible"
-              :title="assignment.name"
-            />
+            <div class="assignment-grid-container">
+              <div>
+                <p>{{ assignment.name }}</p>
+              </div>
+              <div><input type="number" name="points" v-model="assignment.points_possible" /></div>
+            </div>
           </div>
           <SubTotal
             :totalPoints="discussionsTotal"
@@ -78,10 +84,12 @@
             v-for="assignment in quizzes"
             :key="assignment.id"
           >
-            <Assignment
-              :points="assignment.points_possible"
-              :title="assignment.name"
-            />
+            <div class="assignment-grid-container">
+              <div>
+                <p>{{ assignment.name }}</p>
+              </div>
+              <div><input type="number" name="points" v-model="assignment.points_possible" /></div>
+            </div>
           </div>
           <SubTotal
             :totalPoints="quizzesTotal"
@@ -95,10 +103,12 @@
             v-for="assignment in unitExams"
             :key="assignment.id"
           >
-            <Assignment
-              :points="assignment.points_possible"
-              :title="assignment.name"
-            />
+            <div class="assignment-grid-container">
+              <div>
+                <p>{{ assignment.name }}</p>
+              </div>
+              <div><input type="number" name="points" v-model="assignment.points_possible" /></div>
+            </div>
           </div>
           <SubTotal
             :totalPoints="unitExamsTotal"
@@ -112,10 +122,12 @@
             v-for="assignment in finalExams"
             :key="assignment.id"
           >
-            <Assignment
-              :points="assignment.points_possible"
-              :title="assignment.name"
-            />
+            <div class="assignment-grid-container">
+              <div>
+                <p>{{ assignment.name }}</p>
+              </div>
+              <div><input type="number" name="points" v-model="assignment.points_possible" /></div>
+            </div>
           </div>
           <SubTotal
             :totalPoints="finalExamsTotal"
@@ -129,10 +141,12 @@
             v-for="assignment in lessons"
             :key="assignment.id"
           >
-            <Assignment
-              :points="assignment.points_possible"
-              :title="assignment.name"
-            />
+            <div class="assignment-grid-container">
+              <div>
+                <p>{{ assignment.name }}</p>
+              </div>
+              <div><input type="number" name="points" v-model="assignment.points_possible" /></div>
+            </div>
           </div>
         </div>
         <div class="drafts" v-if="drafts.length > 0">
@@ -142,10 +156,12 @@
             v-for="assignment in drafts"
             :key="assignment.id"
           >
-            <Assignment
-              :points="assignment.points_possible"
-              :title="assignment.name"
-            />
+            <div class="assignment-grid-container">
+              <div>
+                <p>{{ assignment.name }}</p>
+              </div>
+              <div><input type="number" name="points" v-model="assignment.points_possible" /></div>
+            </div>
           </div>
         </div>
         <div class="pretests" v-if="preTests.length > 0">
@@ -155,10 +171,12 @@
             v-for="assignment in preTests"
             :key="assignment.id"
           >
-            <Assignment
-              :points="assignment.points_possible"
-              :title="assignment.name"
-            />
+            <div class="assignment-grid-container">
+              <div>
+                <p>{{ assignment.name }}</p>
+              </div>
+              <div><input type="number" name="points" v-model="assignment.points_possible" /></div>
+            </div>
           </div>
         </div>
         <div class="speaking-practice" v-if="speakingPractice.length > 0">
@@ -168,10 +186,12 @@
             v-for="assignment in speakingPractice"
             :key="assignment.id"
           >
-            <Assignment
-              :points="assignment.points_possible"
-              :title="assignment.name"
-            />
+            <div class="assignment-grid-container">
+              <div>
+                <p>{{ assignment.name }}</p>
+              </div>
+              <div><input type="number" name="points" v-model="assignment.points_possible" /></div>
+            </div>
           </div>
         </div>
         <div class="totals" v-if="totalPoints !== null">
@@ -688,5 +708,19 @@ export default {
 .success {
   font-weight: bold;
   color: green;
+}
+.assignment-grid-container {
+  display: grid;
+  grid-template-columns: 80% 20%;
+  border: 1px solid black;
+  margin-bottom: 5px;
+  padding: 10px 15px;
+  align-items: center;
+}
+.assignment-grid-container p {
+  margin: 0;
+}
+.assignment-grid-container input {
+  width: 100%;
 }
 </style>
